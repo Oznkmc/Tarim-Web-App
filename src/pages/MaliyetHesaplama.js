@@ -314,6 +314,14 @@ function MaliyetHesaplama() {
           maliyet: hesapSonucu.akaryakitMaliyeti
         },
         toplamMaliyet: hesapSonucu.toplamMaliyet,
+        potansiyelKar: karHesaplandi && karSonucu ? {
+          donumSayisi: karSonucu.donumSayisi,
+          mahsulMiktariKg: karSonucu.mahsulMiktariKg,
+          tohumFiyatiKg: karSonucu.tohumFiyatiKg,
+          gelir: karSonucu.gelir,
+          toplamMasraf: karSonucu.toplamMasraf,
+          kar: karSonucu.potansiyelKar
+        } : null,
         tarih: serverTimestamp()
       });
       

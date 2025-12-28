@@ -228,6 +228,35 @@ function GecmisIslemler() {
                   </div>
                 )}
               </div>
+
+              {/* Potansiyel Kar */}
+              {maliyet.potansiyelKar && (
+                <div className="mt-4 bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg border-2 border-green-300">
+                  <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                    <span className="mr-2">💰</span> Potansiyel Kar Analizi
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                      <p className="text-xs text-gray-600">Yüzölçümü</p>
+                      <p className="text-sm font-bold text-gray-800">{maliyet.potansiyelKar.donumSayisi} Dönüm</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600">Mahsul</p>
+                      <p className="text-sm font-bold text-gray-800">{maliyet.potansiyelKar.mahsulMiktariKg} kg</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600">Gelir</p>
+                      <p className="text-sm font-bold text-green-700">₺{maliyet.potansiyelKar.gelir?.toLocaleString('tr-TR', { maximumFractionDigits: 0 })}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600">Potansiyel Kar</p>
+                      <p className={`text-lg font-bold ${maliyet.potansiyelKar.kar >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        ₺{maliyet.potansiyelKar.kar?.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           </div>
