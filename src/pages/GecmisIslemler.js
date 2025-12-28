@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { useAuth } from '../contexts/AuthContext';
 
 function GecmisIslemler() {
+  const { currentUser } = useAuth();
   const [maliyetler, setMaliyetler] = useState([]);
   const [filtreYil, setFiltreYil] = useState('');
   const [toplamlar, setToplamlar] = useState({
@@ -13,8 +15,11 @@ function GecmisIslemler() {
   });
 
   useEffect(() => {
-    maliyetleriYukle();
-  }, []);
+    if (currentUser) {
+      maliyetleriYukle();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
 
   useEffect(() => {
     hesaplaToplamlar();
@@ -23,8 +28,17 @@ function GecmisIslemler() {
 
   const maliyetleriYukle = async () => {
     try {
+      if (!currentUser) {
+        console.log('Kullanıcı giriş yapmamış');
+        return;
+      }
+
       const db = getFirestore();
-      const q = query(collection(db, 'maliyetler'), orderBy('tarih', 'desc'));
+      // Önce sadece userId ile filtrele, sonra client-side sırala
+      const q = query(
+        collection(db, 'maliyetler'), 
+        where('userId', '==', currentUser.uid)
+      );
       const querySnapshot = await getDocs(q);
       const data = querySnapshot.docs.map(doc => {
         const docData = doc.data();
@@ -34,9 +48,16 @@ function GecmisIslemler() {
           tarih: docData.tarih?.toDate() || new Date()
         };
       });
+      
+      // Client-side sıralama
+      data.sort((a, b) => b.tarih - a.tarih);
+      
       setMaliyetler(data);
+      console.log('Yüklenen maliyet sayısı:', data.length);
     } catch (error) {
       console.error('Maliyetler yüklenirken hata:', error);
+      console.error('Hata detayı:', error);
+      alert('Veriler yüklenirken hata oluştu: ' + error.message);
     }
   };
 
@@ -68,6 +89,16 @@ function GecmisIslemler() {
   const filtreliMaliyetler = filtreYil 
     ? maliyetler.filter(m => m.tarih.getFullYear().toString() === filtreYil)
     : maliyetler;
+
+  if (!currentUser) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+          Lütfen giriş yapın.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -123,8 +154,14 @@ function GecmisIslemler() {
       {/* İşlem Listesi */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">İşlem Geçmişi</h2>
-        <div className="space-y-4">
-          {filtreliMaliyetler.map((maliyet) => (
+        {filtreliMaliyetler.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg mb-2">📋 Henüz kayıtlı işlem bulunmuyor</p>
+            <p className="text-gray-400 text-sm">Maliyet Hesaplama sayfasından yeni bir hesaplama kaydedin</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filtreliMaliyetler.map((maliyet) => (
             <div key={maliyet.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition duration-300">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                 <div>
@@ -193,10 +230,7 @@ function GecmisIslemler() {
               </div>
             </div>
           ))}
-        </div>
-
-        {filtreliMaliyetler.length === 0 && (
-          <p className="text-center text-gray-500 py-8">Henüz işlem kaydı bulunmuyor.</p>
+          </div>
         )}
       </div>
     </div>

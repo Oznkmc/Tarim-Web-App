@@ -190,26 +190,40 @@ function MaliyetHesaplama() {
 
   const kaydet = async () => {
     try {
+      if (!currentUser) {
+        alert('Kaydedebilmek için giriş yapmalısınız!');
+        return;
+      }
+
       const hesapSonucu = hesapla();
       const db = getFirestore();
       
-      await addDoc(collection(db, 'maliyetHesaplamalari'), {
+      await addDoc(collection(db, 'maliyetler'), {
         userId: currentUser.uid,
         userEmail: currentUser.email,
         urunTipi,
         dolarKuru,
-        gubreler,
-        tohum,
-        ilaclar,
-        suMasrafi: parseFloat(suMasrafi) || 0,
-        sonuc: hesapSonucu,
+        gubre: {
+          detay: gubreler,
+          maliyet: hesapSonucu.gubreMaliyeti
+        },
+        tohum: {
+          detay: tohum,
+          maliyet: hesapSonucu.tohumMaliyeti
+        },
+        ilac: {
+          detay: ilaclar,
+          maliyet: hesapSonucu.ilacMaliyeti
+        },
+        suMasrafi: hesapSonucu.suMaliyeti,
+        toplamMaliyet: hesapSonucu.toplamMaliyet,
         tarih: serverTimestamp()
       });
       
-      alert('Maliyet hesaplaması kaydedildi!');
+      alert('✅ Maliyet hesaplaması başarıyla kaydedildi!');
     } catch (error) {
       console.error('Kayıt hatası:', error);
-      alert('Kayıt sırasında hata oluştu!');
+      alert('❌ Kayıt sırasında hata oluştu: ' + error.message);
     }
   };
 
