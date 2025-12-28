@@ -54,6 +54,14 @@ function MaliyetHesaplama() {
   // Su Masrafı
   const [suMasrafi, setSuMasrafi] = useState('');
 
+  // Akaryakıt Bilgileri
+  const [akaryakit, setAkaryakit] = useState({
+    tip: 'motorin',
+    fiyatTL: '45.67',
+    miktar: '',
+    birim: 'litre'
+  });
+
   const gubreTipleri = [
     { value: 'ure', label: 'ÜRE', minFiyat: 384, maxFiyat: 413 },
     { value: 'amonyum-nitrat', label: 'AMONYUM NİTRAT', minFiyat: 450, maxFiyat: 600 },
@@ -107,6 +115,13 @@ function MaliyetHesaplama() {
     { value: 'giddo', label: 'Giddo (Herbisit)', minFiyat: 1700, maxFiyat: 2700 },
     { value: 'atlantis', label: 'Atlantis Max OD (Herbisit)', minFiyat: 2200, maxFiyat: 3500 },
     { value: 'thunder', label: 'Thunder OD (İnsektisit)', minFiyat: 9500, maxFiyat: 14000 }
+  ];
+
+  const akaryakitTipleri = [
+    { value: 'benzin', label: 'Benzin (95 Oktan)', fiyat: 44.52 },
+    { value: 'motorin', label: 'Motorin', fiyat: 45.67 },
+    { value: 'lpg', label: 'LPG (Otogaz)', fiyat: 23.45 },
+    { value: 'euro-dizel', label: 'Euro Dizel', fiyat: 46.89 }
   ];
 
   const mevcutCesitler = urunTipi === 'bugday' ? bugdayCesitleri : arpaCesitleri;
@@ -171,6 +186,15 @@ function MaliyetHesaplama() {
     });
   };
 
+  const akaryakitTipDegisti = (e) => {
+    const secilenAkaryakit = akaryakitTipleri.find(a => a.value === e.target.value);
+    setAkaryakit({
+      ...akaryakit,
+      tip: e.target.value,
+      fiyatTL: secilenAkaryakit ? secilenAkaryakit.fiyat.toString() : ''
+    });
+  };
+
   const hesapla = () => {
     // Gübre Maliyeti
     const gubreMaliyeti = gubreler.reduce((toplam, gubre) => {
@@ -202,14 +226,20 @@ function MaliyetHesaplama() {
     // Su Masrafı
     const suMaliyeti = suMasrafi ? parseFloat(suMasrafi) : 0;
 
+    // Akaryakıt Maliyeti
+    const akaryakitMaliyeti = akaryakit.fiyatTL && akaryakit.miktar
+      ? parseFloat(akaryakit.fiyatTL) * parseFloat(akaryakit.miktar)
+      : 0;
+
     // Toplam Maliyet
-    const toplamMaliyet = gubreMaliyeti + tohumMaliyeti + ilacMaliyeti + suMaliyeti;
+    const toplamMaliyet = gubreMaliyeti + tohumMaliyeti + ilacMaliyeti + suMaliyeti + akaryakitMaliyeti;
 
     return {
       gubreMaliyeti,
       tohumMaliyeti,
       ilacMaliyeti,
       suMaliyeti,
+      akaryakitMaliyeti,
       toplamMaliyet
     };
   };
@@ -242,6 +272,10 @@ function MaliyetHesaplama() {
           maliyet: hesapSonucu.ilacMaliyeti
         },
         suMasrafi: hesapSonucu.suMaliyeti,
+        akaryakit: {
+          detay: akaryakit,
+          maliyet: hesapSonucu.akaryakitMaliyeti
+        },
         toplamMaliyet: hesapSonucu.toplamMaliyet,
         tarih: serverTimestamp()
       });
@@ -495,6 +529,49 @@ function MaliyetHesaplama() {
         />
       </div>
 
+      {/* Akaryakıt */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">⛽ Akaryakıt</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <select
+            value={akaryakit.tip}
+            onChange={akaryakitTipDegisti}
+            className="p-3 border border-gray-300 rounded-lg"
+          >
+            <option value="">Akaryakıt Tipi Seçin</option>
+            {akaryakitTipleri.map(a => (
+              <option key={a.value} value={a.value}>
+                {a.label} - {a.fiyat} TL/lt
+              </option>
+            ))}
+          </select>
+          <input
+            type="number"
+            step="0.01"
+            value={akaryakit.fiyatTL}
+            onChange={(e) => setAkaryakit({...akaryakit, fiyatTL: e.target.value})}
+            placeholder="Fiyat (TL/litre)"
+            className="p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="number"
+            step="0.01"
+            value={akaryakit.miktar}
+            onChange={(e) => setAkaryakit({...akaryakit, miktar: e.target.value})}
+            placeholder="Miktar (litre)"
+            className="p-3 border border-gray-300 rounded-lg"
+          />
+          <div className="p-3 border border-gray-200 rounded-lg bg-gray-50 flex items-center justify-center">
+            <span className="text-gray-600">Litre</span>
+          </div>
+        </div>
+        {akaryakit.fiyatTL && akaryakit.miktar && (
+          <p className="text-sm text-blue-600 mt-2">
+            Toplam: {(parseFloat(akaryakit.fiyatTL) * parseFloat(akaryakit.miktar)).toFixed(2)} TL
+          </p>
+        )}
+      </div>
+
       {/* Sonuç */}
       <div className="bg-gradient-to-r from-green-500 to-blue-600 rounded-lg shadow-lg p-6 mb-6 text-white">
         <h2 className="text-2xl font-bold mb-4">📊 Maliyet Özeti</h2>
@@ -514,6 +591,10 @@ function MaliyetHesaplama() {
           <div className="bg-white bg-opacity-20 rounded-lg p-4">
             <p className="text-sm">Su Masrafı</p>
             <p className="text-2xl font-bold">{sonuc.suMaliyeti.toFixed(2)} TL</p>
+          </div>
+          <div className="bg-white bg-opacity-20 rounded-lg p-4">
+            <p className="text-sm">Akaryakıt Maliyeti</p>
+            <p className="text-2xl font-bold">{sonuc.akaryakitMaliyeti.toFixed(2)} TL</p>
           </div>
         </div>
         <div className="mt-6 bg-white bg-opacity-30 rounded-lg p-6 text-center">
