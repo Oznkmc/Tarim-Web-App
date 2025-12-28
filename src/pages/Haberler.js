@@ -24,7 +24,15 @@ function Haberler() {
                 // Örnek haberler
                 const ornekHaberler = [
                     {
-                        title: 'Tarımda Dijital Dönüşüm Hızlanıyor',
+                        title: 'Kuraklık Alarmı: Çiftçiler Bu Yıl Verim Kaybı Yaşayabilir',
+                        description: 'Uzmanlar, yağış yetersizliği nedeniyle tarımsal üretimde ciddi kayıplar yaşanabileceği konusunda çiftçileri uyarıyor.',
+                        url: 'https://www.tarim.gov.tr',
+                        urlToImage: 'Resimler/kuraklik.jpg',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Tarımda Dijital Dönüşüm: Akıllı Sulama Sistemleri Yaygınlaşıyor',
                         description: 'Çiftçiler artık akıllı tarım teknolojilerini daha fazla kullanmaya başladı. Drone ve sensör teknolojileri verimliliği artırıyor.',
                         url: 'https://www.saraymedya.com/haber/2025-te-turkiye-tariminda-dijital-donusum-ve-su-yonetimi-on-plana-cikti_230068/',
                         urlToImage: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400',
@@ -32,42 +40,82 @@ function Haberler() {
                         source: { name: 'Tarım Platformu' }
                     },
                     {
-                        title: 'Buğday Fiyatlarında Artış Beklentisi',
-                        description: 'Küresel piyasalarda yaşanan gelişmeler nedeniyle buğday fiyatlarında artış bekleniyor.',
+                        title: 'Mazot ve Gübre Desteği Çiftçilerin Hesaplarına Yatırıldı',
+                        description: 'Tarım ve Orman Bakanlığı tarafından açıklanan mazot ve gübre destekleri çiftçilerin hesaplarına yatırılmaya başlandı.',
+                        url: 'https://www.tarimorman.gov.tr/Haber/6466/Yaklasik-324-Milyon-Liralik-Tarimsal-Destekleme-Odemesi-Ciftcilerin-Hesaplarina-Aktarildi#:~:text=Mazot%20ve%20G%C3%BCbre%20Deste%C4%9Fi%20kapsam%C4%B1nda,%C3%B6deme%20bug%C3%BCn%20%C3%A7ift%C3%A7ilerin%20hesaplar%C4%B1na%20aktar%C4%B1ld%C4%B1.',
+                        urlToImage: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=400',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Genç Çiftçilere Hibe Desteği: Başvurular Başladı',
+                        description: 'Genç girişimcilerin tarım sektöründe yer almasını teşvik etmek amacıyla hibe başvuruları başladı.',
+                        url: 'https://www.ziraatmakinem.com/tr-tarimhaberidetay-1?srsltid=AfmBOor8gJiCnfiXoFSBn70qPlPBzdfzUvxQACpdnUXD8XvcwjYS5-2h',
+                        urlToImage: 'Resimler/hibe.jpg',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Organik Tarıma Talep Artıyor: Üreticiler Yeni Pazarlara Açılıyor',
+                        description: 'Son yıllarda organik tarım yapan çiftçi sayısında ciddi artış yaşanıyor. Tüketici talebi de yükseliyor.',
+                        url: 'https://ekolojikpazarlar.org/?page_id=2670',
+                        urlToImage: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Zirai Don Meyve Bahçelerini Vurdu: Rekolte Düşüşü Bekleniyor',
+                        description: 'Bahar aylarında yaşanan zirai don olayı meyve bahçelerinde ciddi hasara neden oldu. Üreticiler endişeli.',
+                        url: 'https://www.tarim.gov.tr',
+                        urlToImage: 'Resimler/ziraidon.jpg',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Tarımda Yapay Zekâ Dönemi: Hastalıklar Önceden Tespit Edilecek',
+                        description: 'Yapay zekâ destekli sistemler, bitki hastalıklarını erken tespit ederek çiftçilere büyük avantaj sağlıyor.',
+                        url: 'https://www.aa.com.tr/tr/bilim-teknoloji/yapay-zeka-ile-tarimdaki-zararli-populasyonu-onceden-tespit-edilecek/3211104',
+                        urlToImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Buğday Alım Fiyatları Açıklandı: Çiftçinin Yüzü Gülecek mi?',
+                        description: 'Küresel piyasalarda yaşanan gelişmeler nedeniyle buğday alım fiyatları yeniden belirlendi.',
                         url: 'https://www.dw.com/tr/bu%C4%9Fday-fiyatlar%C4%B1-t%C3%BCrkiyeyi-nas%C4%B1l-etkileyecek/a-66386877',
                         urlToImage: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400',
                         publishedAt: new Date().toISOString(),
                         source: { name: 'Tarım Platformu' }
                     },
                     {
-                        title: 'Organik Tarıma İlgi Artıyor',
-                        description: 'Son yıllarda organik tarım yapan çiftçi sayısında ciddi artış yaşanıyor. Tüketici talebi de yükseliyor.',
-                        url: 'https://www.tarim.gov.tr',
-                        urlToImage: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400',
-                        publishedAt: new Date().toISOString(),
-                        source: { name: 'Tarım Platformu' }
-                    },
-                    {
-                        title: 'Yeni Gübre Destekleri Açıklandı',
-                        description: 'Tarım ve Orman Bakanlığı çiftçilere yönelik yeni gübre destek paketini duyurdu.',
-                        url: 'https://www.tarim.gov.tr',
+                        title: 'Sera Tarımıyla Dört Mevsim Üretim Hedefleniyor',
+                        description: 'Modern sera teknolojileri sayesinde yıl boyu kesintisiz üretim yapılması hedefleniyor.',
+                        url: 'https://www.aa.com.tr/tr/yasam/evlerin-terasinda-kurdugu-seralarda-4-mevsim-organik-tarim-yapiyor/3456874',
                         urlToImage: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=400',
                         publishedAt: new Date().toISOString(),
                         source: { name: 'Tarım Platformu' }
                     },
                     {
-                        title: 'İklim Değişikliği ve Tarım',
+                        title: 'İklim Değişikliği Tarımı Tehdit Ediyor: Uzmanlardan Kritik Uyarılar',
                         description: 'İklim değişikliğinin tarım üzerindeki etkileri ve alınması gereken önlemler masaya yatırıldı.',
-                        url: 'https://www.tarim.gov.tr',
+                        url: 'https://www.hurriyet.com.tr/yazarlar/erdal-fernergiz/iklim-ve-su-krizi-uyarisi-felaket-kapida-42926018',
                         urlToImage: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=400',
                         publishedAt: new Date().toISOString(),
                         source: { name: 'Tarım Platformu' }
                     },
                     {
-                        title: 'Akıllı Sulama Sistemleri',
-                        description: 'Su tasarrufu sağlayan akıllı sulama sistemleri çiftçiler tarafından tercih ediliyor.',
-                        url: 'https://www.tarim.gov.tr',
+                        title: 'Yerel Tohum Projesiyle Tarımsal Bağımsızlık Güçleniyor',
+                        description: 'Yerel ve endemik tohumların korunması ve yaygınlaştırılması için yeni projeler hayata geçiriliyor.',
+                        url: 'https://www.aa.com.tr/tr/ekonomi/tescillenen-ata-tohumlari-tarim-kredi-kooperatifi-marketlerinde-satisa-sunuldu/3496822',
                         urlToImage: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=400',
+                        publishedAt: new Date().toISOString(),
+                        source: { name: 'Tarım Platformu' }
+                    },
+                    {
+                        title: 'Tarım İhracatında Rekor Artış: Sebze ve Meyve Ön Planda',
+                        description: 'Türkiye\'nin tarım ürünleri ihracatı rekor seviyeye ulaştı. Sebze ve meyve ihracatı öne çıkıyor.',
+                        url: 'https://www.aa.com.tr/tr/ekonomi/tarim-sektorunden-ihracat-rekoru/3448041',
+                        urlToImage: 'Resimler/çiftçilerinparasiyatti.jpg',
                         publishedAt: new Date().toISOString(),
                         source: { name: 'Tarım Platformu' }
                     }
