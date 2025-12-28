@@ -56,6 +56,9 @@ function Navbar() {
             <Link to="/haberler" className={linkClass('/haberler')}>
               📰 Haberler
             </Link>
+            <Link to="/akaryakit-fiyatlari" className={linkClass('/akaryakit-fiyatlari')}>
+              ⛽ Akaryakıt
+            </Link>
             <Link to="/gecmis-islemler" className={linkClass('/gecmis-islemler')}>
               Geçmiş İşlemler
             </Link>
