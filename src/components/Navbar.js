@@ -53,6 +53,9 @@ function Navbar() {
             <Link to="/ilac-borsasi" className={linkClass('/ilac-borsasi')}>
               İlaç Borsası
             </Link>
+            <Link to="/haberler" className={linkClass('/haberler')}>
+              📰 Haberler
+            </Link>
             <Link to="/gecmis-islemler" className={linkClass('/gecmis-islemler')}>
               Geçmiş İşlemler
             </Link>

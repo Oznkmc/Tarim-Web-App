@@ -9,6 +9,7 @@ import MaliyetHesaplama from './pages/MaliyetHesaplama';
 import GubreBorsasi from './pages/GubreBorsasi';
 import TohumBorsasi from './pages/TohumBorsasi';
 import IlacBorsasi from './pages/IlacBorsasi';
+import Haberler from './pages/Haberler';
 import GecmisIslemler from './pages/GecmisIslemler';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/gubre-borsasi" element={<GubreBorsasi />} />
                     <Route path="/tohum-borsasi" element={<TohumBorsasi />} />
                     <Route path="/ilac-borsasi" element={<IlacBorsasi />} />
+                    <Route path="/haberler" element={<Haberler />} />
                     <Route path="/gecmis-islemler" element={<GecmisIslemler />} />
                   </Routes>
                 </>
