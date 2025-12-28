@@ -59,6 +59,9 @@ function Navbar() {
             <Link to="/akaryakit-fiyatlari" className={linkClass('/akaryakit-fiyatlari')}>
               ⛽ Akaryakıt
             </Link>
+            <Link to="/parsel-sorgulama" className={linkClass('/parsel-sorgulama')}>
+              📍 Parsel Sorgu
+            </Link>
             <Link to="/gecmis-islemler" className={linkClass('/gecmis-islemler')}>
               Geçmiş İşlemler
             </Link>

@@ -11,6 +11,7 @@ import TohumBorsasi from './pages/TohumBorsasi';
 import IlacBorsasi from './pages/IlacBorsasi';
 import Haberler from './pages/Haberler';
 import AkaryakitFiyatlari from './pages/AkaryakitFiyatlari';
+import ParselSorgulama from './pages/ParselSorgulama';
 import GecmisIslemler from './pages/GecmisIslemler';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/ilac-borsasi" element={<IlacBorsasi />} />
                     <Route path="/haberler" element={<Haberler />} />
                     <Route path="/akaryakit-fiyatlari" element={<AkaryakitFiyatlari />} />
+                    <Route path="/parsel-sorgulama" element={<ParselSorgulama />} />
                     <Route path="/gecmis-islemler" element={<GecmisIslemler />} />
                   </Routes>
                 </>
