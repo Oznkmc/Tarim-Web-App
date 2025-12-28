@@ -1,11 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 
 function MaliyetHesaplama() {
   const { currentUser } = useAuth();
   const [dolarKuru, setDolarKuru] = useState(35.0);
+  const [kuruYukleniyor, setKuruYukleniyor] = useState(false);
   const [urunTipi, setUrunTipi] = useState('bugday');
+  
+  // Dolar kurunu çek
+  useEffect(() => {
+    fetchDolarKuru();
+  }, []);
+
+  const fetchDolarKuru = async () => {
+    try {
+      setKuruYukleniyor(true);
+      // exchangerate-api.com - ücretsiz API
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const data = await response.json();
+      
+      if (data.rates && data.rates.TRY) {
+        const kur = data.rates.TRY;
+        setDolarKuru(parseFloat(kur.toFixed(2)));
+        console.log('Güncel dolar kuru:', kur);
+      }
+    } catch (error) {
+      console.error('Dolar kuru çekilemedi:', error);
+      // Hata durumunda varsayılan değer kalacak
+    } finally {
+      setKuruYukleniyor(false);
+    }
+  };
   
   // Gübre Bilgileri
   const [gubreler, setGubreler] = useState([
@@ -235,7 +261,7 @@ function MaliyetHesaplama() {
 
       {/* Dolar Kuru */}
       <div className="bg-blue-50 rounded-lg shadow-md p-4 mb-6">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <label className="font-semibold text-gray-700">💵 Dolar Kuru (TL):</label>
           <input
             type="number"
@@ -243,8 +269,21 @@ function MaliyetHesaplama() {
             value={dolarKuru}
             onChange={(e) => setDolarKuru(parseFloat(e.target.value))}
             className="p-2 border border-gray-300 rounded-lg w-32 focus:ring-2 focus:ring-blue-500"
+            disabled={kuruYukleniyor}
           />
-          <span className="text-sm text-gray-600">1$ = {dolarKuru} TL</span>
+          <span className="text-sm text-gray-600">
+            {kuruYukleniyor ? '⏳ Güncelleniyor...' : `1$ = ${dolarKuru} TL`}
+          </span>
+          <button
+            onClick={fetchDolarKuru}
+            disabled={kuruYukleniyor}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50 transition"
+          >
+            🔄 Yenile
+          </button>
+          <span className="text-xs text-gray-500">
+            Otomatik API'den çekildi
+          </span>
         </div>
       </div>
 
