@@ -8,7 +8,7 @@ function MaliyetHesaplama() {
   const [kuruYukleniyor, setKuruYukleniyor] = useState(false);
   const [urunTipi, setUrunTipi] = useState('bugday');
   
-  // Dolar kurunu çek
+  
   useEffect(() => {
     fetchDolarKuru();
   }, []);
@@ -16,7 +16,7 @@ function MaliyetHesaplama() {
   const fetchDolarKuru = async () => {
     try {
       setKuruYukleniyor(true);
-      // exchangerate-api.com - ücretsiz API
+   
       const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
       const data = await response.json();
       
@@ -61,6 +61,11 @@ function MaliyetHesaplama() {
     miktar: '',
     birim: 'litre'
   });
+
+  // Potansiyel Kar Hesaplama
+  const [donumBilgisi, setDonumBilgisi] = useState('');
+  const [karHesaplandi, setKarHesaplandi] = useState(false);
+  const [karSonucu, setKarSonucu] = useState(null);
 
   const gubreTipleri = [
     { value: 'ure', label: 'ÜRE', minFiyat: 384, maxFiyat: 413 },
@@ -193,6 +198,38 @@ function MaliyetHesaplama() {
       tip: e.target.value,
       fiyatTL: secilenAkaryakit ? secilenAkaryakit.fiyat.toString() : ''
     });
+  };
+
+  const potansiyelKarHesapla = () => {
+    if (!donumBilgisi || !tohum.fiyatTL) {
+      alert('Lütfen dönüm sayısını ve tohum çeşidini girin!');
+      return;
+    }
+
+    const donumSayisi = parseFloat(donumBilgisi);
+    const tohumFiyatiKg = parseFloat(tohum.fiyatTL);
+    
+    // Dönüm × 600 kg mahsul hesabı
+    const mahsulMiktariKg = donumSayisi * 600;
+    // Gelir: (Dönüm × 600 kg) × Tohum Fiyatı
+    const gelir = mahsulMiktariKg * tohumFiyatiKg;
+    
+    // Toplam maliyet
+    const hesapSonucu = hesapla();
+    const toplamMasraf = hesapSonucu.toplamMaliyet;
+    
+    // Potansiyel kar: Gelir - Masraflar
+    const potansiyelKar = gelir - toplamMasraf;
+    
+    setKarSonucu({
+      donumSayisi,
+      mahsulMiktariKg,
+      tohumFiyatiKg,
+      gelir,
+      toplamMasraf,
+      potansiyelKar
+    });
+    setKarHesaplandi(true);
   };
 
   const hesapla = () => {
@@ -601,6 +638,64 @@ function MaliyetHesaplama() {
           <p className="text-lg mb-2">TOPLAM MALİYET</p>
           <p className="text-4xl font-bold">{sonuc.toplamMaliyet.toFixed(2)} TL</p>
         </div>
+      </div>
+
+      {/* Potansiyel Kar Hesaplama */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">📈 Potansiyel Kar Hesaplama</h2>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Yüzölçümü (Dönüm Sayısı)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            value={donumBilgisi}
+            onChange={(e) => setDonumBilgisi(e.target.value)}
+            placeholder="Örn: 5"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+          />
+          <p className="text-xs text-gray-500 mt-1">Dönüm başı 600 kg mahsul hesaplanacaktır</p>
+        </div>
+        <button
+          onClick={potansiyelKarHesapla}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300"
+        >
+          🧮 Potansiyel Karı Hesapla
+        </button>
+        
+        {karHesaplandi && karSonucu && (
+          <div className="mt-6 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg p-6 text-white">
+            <h3 className="text-2xl font-bold mb-4">💰 Kar Analizi</h3>
+            <div className="space-y-3">
+              <div className="bg-white bg-opacity-20 rounded-lg p-3">
+                <p className="text-sm">Yüzölçümü</p>
+                <p className="text-xl font-bold">{karSonucu.donumSayisi} Dönüm</p>
+              </div>
+              <div className="bg-white bg-opacity-20 rounded-lg p-3">
+                <p className="text-sm">Toplam Mahsul Miktarı</p>
+                <p className="text-xl font-bold">{karSonucu.mahsulMiktariKg} kg</p>
+                <p className="text-xs mt-1 opacity-80">({karSonucu.donumSayisi} dönüm × 600 kg)</p>
+              </div>
+              <div className="bg-white bg-opacity-20 rounded-lg p-3">
+                <p className="text-sm">Gelir</p>
+                <p className="text-xl font-bold">{karSonucu.gelir.toFixed(2)} TL</p>
+                <p className="text-xs mt-1 opacity-80">({karSonucu.mahsulMiktariKg} kg × {karSonucu.tohumFiyatiKg} TL/kg)</p>
+              </div>
+              <div className="bg-white bg-opacity-20 rounded-lg p-3">
+                <p className="text-sm">Toplam Masraflar</p>
+                <p className="text-xl font-bold">-{karSonucu.toplamMasraf.toFixed(2)} TL</p>
+              </div>
+              <div className={`rounded-lg p-4 ${karSonucu.potansiyelKar >= 0 ? 'bg-green-600' : 'bg-red-600'}`}>
+                <p className="text-sm">POTANSİYEL KAR</p>
+                <p className="text-3xl font-bold">{karSonucu.potansiyelKar.toFixed(2)} TL</p>
+                {karSonucu.potansiyelKar < 0 && (
+                  <p className="text-xs mt-2">⚠️ Dikkat: Zarar durumu söz konusu</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Kaydet Butonu */}
