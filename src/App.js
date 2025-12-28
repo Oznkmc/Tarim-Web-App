@@ -1,24 +1,45 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { AuthProvider } from './contexts/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import Navbar from './components/Navbar';
+import AnaSayfa from './pages/AnaSayfa';
+import MaliyetHesaplama from './pages/MaliyetHesaplama';
+import GubreBorsasi from './pages/GubreBorsasi';
+import TohumBorsasi from './pages/TohumBorsasi';
+import IlacBorsasi from './pages/IlacBorsasi';
+import GecmisIslemler from './pages/GecmisIslemler';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthProvider>
+        <div className="min-h-screen bg-gray-100">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/*" element={
+              <PrivateRoute>
+                <>
+                  <Navbar />
+                  <Routes>
+                    <Route path="/" element={<AnaSayfa />} />
+                    <Route path="/maliyet-hesaplama" element={<MaliyetHesaplama />} />
+                    <Route path="/gubre-borsasi" element={<GubreBorsasi />} />
+                    <Route path="/tohum-borsasi" element={<TohumBorsasi />} />
+                    <Route path="/ilac-borsasi" element={<IlacBorsasi />} />
+                    <Route path="/gecmis-islemler" element={<GecmisIslemler />} />
+                  </Routes>
+                </>
+              </PrivateRoute>
+            } />
+          </Routes>
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
